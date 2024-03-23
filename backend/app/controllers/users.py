@@ -3,20 +3,6 @@ from flask import current_app
 from werkzeug.security import generate_password_hash
 from typing import Dict, Any
 
-
-@login_manager.user_loader
-def load_user(username: str):
-    """
-    A callback function that is used to reload the user object from the user username stored in the session.
-
-    Args:
-        username (str): The username of the user
-
-    Returns:
-        User: The user object
-    """
-    return get_user(username)
-
 def user_exists(username: str) -> bool:
     """
     Check if a user exists in the "users" table
@@ -29,7 +15,7 @@ def user_exists(username: str) -> bool:
     """
     return get_user(username) is not None
 
-def get_user(username: str) -> Dict[str, Any]:
+def get_user(username: str) -> Dict[str, str]:
     """
     Get a user from the "users" table
 
@@ -37,7 +23,7 @@ def get_user(username: str) -> Dict[str, Any]:
         username (str): The username of the user
 
     Returns:
-        Dict[str, Any]: The user
+        Dict[str, str]: The user
     """
     return current_app.db.users.find_one({"username": username})
 

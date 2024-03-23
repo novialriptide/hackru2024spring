@@ -11,23 +11,21 @@ def create_user_route():
     {
         "username": "string",
         "password": "string",
-        "name": "string",
     }
     
     Route:
         http://localhost:5000/users
 
     Returns:
-        JSON: A JSON object containing the user's username and name
+        JSON: A JSON object containing the user's username
     """
     data = request.get_json()
     username = data["username"]
     password = data["password"]
-    name = data["name"]
     if user_exists(username):
         abort(400)
-    new_user = create_user(username, password, name)
-    return jsonify(new_user), 201
+    new_user = create_user(username, password)
+    return jsonify({"username": new_user["username"]}), 201
 
 
 @users_bp.route("/users/<b32:username>", methods=["DELETE"])

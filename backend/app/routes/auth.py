@@ -2,6 +2,7 @@ from flask_login import login_user, logout_user, login_required, current_user
 from app.controllers.users import user_exists, get_user
 from werkzeug.security import check_password_hash
 from flask import Blueprint, abort, request
+from app.models.users import User
 
 auth_bp = Blueprint("auth", __name__)
 
@@ -23,13 +24,16 @@ def login_route():
     data = request.get_json()
     username = data["username"]
     password = data["password"]
+    if not username or not password:
+        abort(400, description="Missing username or password")
     if not user_exists(username):
         abort(404)
-    user = get_user(username)
-    if not check_password_hash(user.password, password):
+    user_dict = get_user(username)
+    if not check_password_hash(user_dict["password"], password):
         abort(401)
-    login_user(user)
-    return f"{user} logged in successfully", 200
+    user_object = User(user_dict)
+    login_user(user_object)
+    return f"{user_dict['username']} logged in successfully", 200
 
 @auth_bp.route("/logout", methods=["POST"])
 @login_required
@@ -43,7 +47,7 @@ def logout_route():
     Returns:
         str: A message indicating that the user has been logged out
     """
-    user_repr = current_user.__repr__()
+    user_repr = current_user.user_dict["username"]
     logout_user()
     return f"{user_repr} logged out successfully", 200
 
