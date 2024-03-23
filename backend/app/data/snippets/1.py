@@ -4,4 +4,4 @@ class Solution(object):
         :type n: int
         :rtype: List[str]
         """
-        return []  # the list of strings
+        return ["Fizz"]  # the list of strings

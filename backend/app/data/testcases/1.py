@@ -1,5 +1,6 @@
 import unittest
-from snippets.question1 import Solution
+import argparse
+import importlib.util
 
 
 class TestFizzBuzz(unittest.TestCase):
@@ -32,4 +33,15 @@ class TestFizzBuzz(unittest.TestCase):
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "solution_file", help="The Python file containing the Solution class"
+    )
+    args = parser.parse_args()
+
+    spec = importlib.util.spec_from_file_location("solution", args.solution_file)
+    solution_module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(solution_module)
+    Solution = solution_module.Solution
+
     unittest.main()
