@@ -7,7 +7,7 @@
 
 # The flask server will only restart if changes to the app directory are made
 
-source venv/bin/activate
+. venv/bin/activate
 export FLASK_APP=app
 export FLASK_ENV=development
 export FLASK_RUN_PORT=5000
